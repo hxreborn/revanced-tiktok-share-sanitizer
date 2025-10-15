@@ -47,3 +47,6 @@ re/*/jar/
 re/*/cfr/
 re/*/apktool/
 re/*/*.apk
+
+# Upstream repositories (cloned for integration testing)
+re/upstream/
