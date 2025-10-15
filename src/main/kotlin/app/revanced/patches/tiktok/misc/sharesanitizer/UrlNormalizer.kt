@@ -1,5 +1,6 @@
 package app.revanced.patches.tiktok.misc.sharesanitizer
 
+import app.revanced.patches.tiktok.misc.sharesanitizer.SanitizerError.NormalizationError
 import java.net.URI
 import java.net.URLDecoder
 
@@ -20,20 +21,21 @@ object UrlNormalizer {
      * Normalizes a TikTok URL to canonical form.
      *
      * @param url The TikTok URL to normalize (already expanded if it was a shortlink)
-     * @return Canonical URL: https://www.tiktok.com/@USER/video/ID
-     * @throws IllegalArgumentException if URL is not a valid TikTok video URL
+     * @return Result containing canonical URL or NormalizationError
      */
-    fun normalize(url: String): String {
+    fun normalize(url: String): Result<String, NormalizationError> {
         val uri = try {
             URI(url.trim().removeSuffix("/"))
         } catch (e: Exception) {
-            throw IllegalArgumentException("Invalid URL format: $url", e)
+            return err(NormalizationError.InvalidFormat(url, e.message))
         }
 
         // Validate it's a TikTok domain
-        val host = uri.host?.lowercase() ?: throw IllegalArgumentException("URL has no host: $url")
+        val host = uri.host?.lowercase()
+            ?: return err(NormalizationError.NoHost(url))
+
         if (!isTikTokDomain(host)) {
-            throw IllegalArgumentException("Not a TikTok URL: $url")
+            return err(NormalizationError.NotTikTok(url, host))
         }
 
         // Decode percent-encoded path
@@ -41,12 +43,12 @@ object UrlNormalizer {
 
         // Extract @username and video ID
         val match = VIDEO_PATH_REGEX.find(decodedPath)
-            ?: throw IllegalArgumentException("URL does not contain valid @user/video/id format: $url")
+            ?: return err(NormalizationError.InvalidPath(url, uri.path))
 
         val (username, videoId) = match.destructured
 
         // Reconstruct canonical URL (no query, no fragment, no trailing slash)
-        return "https://www.tiktok.com/@$username/video/$videoId"
+        return ok("https://www.tiktok.com/@$username/video/$videoId")
     }
 
     /**

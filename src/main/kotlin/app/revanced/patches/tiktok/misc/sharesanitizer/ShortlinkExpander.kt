@@ -1,5 +1,7 @@
 package app.revanced.patches.tiktok.misc.sharesanitizer
 
+import app.revanced.patches.tiktok.misc.sharesanitizer.SanitizerError.ExpansionError
+
 /**
  * Expands TikTok shortlinks (vm.tiktok.com, vt.tiktok.com) to their full destination URLs.
  */
@@ -9,14 +11,13 @@ class ShortlinkExpander(private val httpClient: HttpClient) {
      * Expands a TikTok URL if it's a shortlink, otherwise returns it unchanged.
      *
      * @param url The URL to potentially expand
-     * @return The expanded URL if it was a shortlink, or the original URL
-     * @throws HttpException if shortlink expansion fails
+     * @return Result containing the expanded URL or ExpansionError
      */
-    fun expand(url: String): String {
+    fun expand(url: String): Result<String, ExpansionError> {
         return if (isShortlink(url)) {
             httpClient.followRedirects(url)
         } else {
-            url
+            ok(url)
         }
     }
 
