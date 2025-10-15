@@ -6,10 +6,14 @@ A standalone incubator for a ReVanced patch that removes tracking parameters fro
 
 - ✅ **Phase 1**: Gradle/Kotlin scaffold with Java 17 toolchain
 - ✅ **Phase 2**: URL normalization (10 tests, 100% passing)
-- ✅ **Phase 3**: HTTP shortlink expansion (11 tests, OkHttp 4.12.0)
+- ✅ **Phase 3**: HTTP shortlink expansion (21 tests total, OkHttp 4.12.0)
 - ⏳ **Phase 4**: ReVanced patch integration (blocked on reverse engineering)
 
 **Current Test Suite:** 21/21 passing (1.5s)
+
+- `UrlNormalizerTest`: 10 tests
+- `ShortlinkExpanderTest`: 4 tests
+- `OkHttpClientAdapterTest`: 7 tests
 
 ## What It Does
 
@@ -37,10 +41,13 @@ src/test/kotlin/.../sharesanitizer/
 
 docs/
 ├── UPSTREAM_MIGRATION.md     # Strategy for revanced-patches PR
-└── (planned) REVERSE_ENGINEERING.md
+├── REVERSE_ENGINEERING.md    # Template for Phase 4 APK analysis
+└── BEST_PRACTICES.md         # ReVanced patch patterns & conventions
+
+apk/                           # Reference TikTok APKs for RE & manual tests
 
 build.gradle.kts              # Standalone build (not for upstream)
-instructions.md               # Functional/technical requirements
+instructions.md               # Canonical requirements doc (design reference)
 CLAUDE.md                     # AI assistant guidance
 ```
 
