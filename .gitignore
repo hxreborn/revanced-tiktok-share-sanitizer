@@ -57,3 +57,7 @@ workspace/tiktok-*/cfr/
 workspace/tiktok-*/apktool/
 workspace/tiktok-*/*.apk
 .mcp
+
+# Local configuration (should not be committed)
+local.properties
+.mcp
