@@ -2,9 +2,11 @@
 kotlin = "2.1.0"
 okhttp = "5.0.0-alpha.14"
 junit = "5.14.0"
+revanced-patcher = "0.17.6"
 
 [libraries]
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+revanced-patcher = { module = "app.revanced:revanced-patcher", version.ref = "revanced-patcher" }
 okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
