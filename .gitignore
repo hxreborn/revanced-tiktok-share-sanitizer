@@ -88,3 +88,22 @@ apk/revanced-tiktok-temporary-files/
 
 # Build artifacts
 build-fixes/
+
+# APK analysis and patching artifacts
+apk/
+apktool/
+*.apk
+*.keystore
+*.rvp
+
+# Workspace and analysis files
+workspace/
+*.cfr/
+*.dex/
+*.jar/
+
+# Local configuration
+local.properties
+
+# MCP configuration
+.mcp/
