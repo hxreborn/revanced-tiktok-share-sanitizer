@@ -180,37 +180,58 @@ val shareSanitizerPatch = bytecodePatch(
 
 ## Extension Hook (revanced-integrations)
 
-The companion extension class will be:
+The companion extension class will use Result-based error handling:
 
 ```kotlin
 package app.revanced.extension.tiktok.sharesanitizer
 
-import app.revanced.patches.tiktok.misc.sharesanitizer.ShortlinkExpander
-import app.revanced.patches.tiktok.misc.sharesanitizer.UrlNormalizer
+import app.revanced.patches.tiktok.misc.sharesanitizer.*
+import android.widget.Toast
+import android.content.Context
 
 object ShareSanitizerHook {
     @JvmStatic
-    fun sanitizeUrl(originalUrl: String): String {
-        return try {
-            val expanded = if (ShortlinkExpander.isShortlink(originalUrl)) {
-                ShortlinkExpander.expand(originalUrl)
-            } else {
-                originalUrl
-            }
+    fun sanitizeUrl(context: Context, originalUrl: String): String? {
+        val expander = ShortlinkExpander.create()
 
-            val normalized = UrlNormalizer.normalize(expanded)
-
-            if (ShareSanitizerSettings.shouldAppendMessage()) {
-                "$normalized\n\nAnonymized share: clean link, tracking removed."
-            } else {
-                normalized
+        // Step 1: Expand shortlinks if needed
+        val expandedUrl = when (val result = expander.expand(originalUrl)) {
+            is Result.Ok -> result.value
+            is Result.Err -> {
+                showToast(context, result.error.toToastMessage())
+                return null // Block share
             }
-        } catch (e: Exception) {
-            // Fail closed: return empty string to block share
-            // Toast will be shown by patch
-            ""
+        }
+
+        // Step 2: Normalize to canonical form
+        val canonicalUrl = when (val result = UrlNormalizer.normalize(expandedUrl)) {
+            is Result.Ok -> result.value
+            is Result.Err -> {
+                showToast(context, result.error.toToastMessage())
+                return null // Block share
+            }
+        }
+
+        // Step 3: Optionally append message
+        return if (ShareSanitizerSettings.shouldAppendMessage()) {
+            "$canonicalUrl\n\nAnonymized share: clean link, tracking removed."
+        } else {
+            canonicalUrl
         }
     }
+
+    private fun showToast(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+}
+```
+
+**Usage in ShareSanitizerPatch:**
+
+```kotlin
+when (val sanitized = ShareSanitizerHook.sanitizeUrl(context, originalUrl)) {
+    null -> return // Block share (error toast already shown)
+    else -> clipboard.setPrimaryClip(ClipData.newPlainText("tiktok_video", sanitized))
 }
 ```
 

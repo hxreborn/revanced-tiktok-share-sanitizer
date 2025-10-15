@@ -109,11 +109,13 @@ See [`docs/UPSTREAM_MIGRATION.md`](docs/UPSTREAM_MIGRATION.md) for detailed migr
 
 ## Key Design Decisions
 
-1. **OkHttp 4.12.0 (stable)** - Not alpha version to avoid upstream friction
-2. **HTTP abstraction interface** - Allows swapping HTTP client if needed
-3. **HEAD with GET fallback** - Handles servers rejecting HEAD requests
-4. **Max 5 redirects, 3s timeout** - Hardcoded limits for deterministic behavior
-5. **Fail-closed philosophy** - Never fall back to unsanitized URLs on error
+1. **Result-based error handling** - Rust-inspired `Result<T, E>` type for explicit error handling (no exceptions)
+2. **Typed error hierarchy** - `SanitizerError` with user-friendly toast messages for Phase 4
+3. **OkHttp 4.12.0 (stable)** - Not alpha version to avoid upstream friction
+4. **HTTP abstraction interface** - Allows swapping HTTP client if needed
+5. **HEAD with GET fallback** - Handles servers rejecting HEAD requests
+6. **Max 5 redirects, 3s timeout** - Hardcoded limits for deterministic behavior
+7. **Fail-closed philosophy** - Never fall back to unsanitized URLs on error
 
 ## Dependencies
 
