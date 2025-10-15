@@ -40,11 +40,12 @@ open build/reports/tests/test/index.html
    - Decodes percent-encoded path segments
    - Validates TikTok domains and URL format
 
-2. **HTTP Layer** (planned, not yet implemented)
-   - Will use abstraction over OkHttp to resolve `vm`/`vt` shortlinks
-   - HEAD request with GET fallback
+2. **HTTP Layer** (`src/main/kotlin/.../sharesanitizer/OkHttpClientAdapter.kt`) ✅
+   - HTTP abstraction interface with OkHttp 4.12.0 implementation
+   - HEAD request with GET fallback for servers that reject HEAD
    - Redirect chain protection (max depth: 5)
-   - Configurable timeout (default: 3s)
+   - 3-second timeout for deterministic behavior
+   - 7 tests covering redirect chains, timeouts, and fallback logic
 
 3. **ReVanced Patch** (planned, requires reverse engineering)
    - Will hook TikTok's share intent construction
@@ -56,9 +57,11 @@ open build/reports/tests/test/index.html
 **Development Stages:**
 
 - **Phase 1** ✅: Minimal Gradle scaffold with Java 17 toolchain
-- **Phase 2** ✅: URL normalization logic with comprehensive tests (10 tests, 100% passing)
-- **Phase 3** ✅: HTTP client abstraction + shortlink expansion (11 tests, OkHttp 4.12.0)
+- **Phase 2** ✅: URL normalization logic (10 tests, 100% passing)
+- **Phase 3** ✅: HTTP client abstraction + shortlink expansion (21 tests total, OkHttp 4.12.0)
 - **Phase 4** (blocked): ReVanced integration (requires reverse engineering TikTok APK)
+
+**Test Breakdown:** 10 UrlNormalizer + 4 ShortlinkExpander + 7 OkHttpClientAdapter = 21 total
 
 ## Design Constraints
 
@@ -73,8 +76,10 @@ open build/reports/tests/test/index.html
 ## Key Files
 
 - `instructions.md` - Detailed functional/technical requirements and project roadmap
-- `src/main/kotlin/.../UrlNormalizer.kt` - Core URL normalization logic
-- `src/test/kotlin/.../UrlNormalizerTest.kt` - Comprehensive test suite (10 tests)
+- `src/main/kotlin/.../UrlNormalizer.kt` - Core URL normalization logic (10 tests)
+- `src/main/kotlin/.../ShortlinkExpander.kt` - HTTP redirect following (4 tests)
+- `src/main/kotlin/.../OkHttpClientAdapter.kt` - HTTP client implementation (7 tests)
+- `docs/BEST_PRACTICES.md` - ReVanced patch development patterns and upstream prep
 - `gradle.properties` - Java 17 path configuration
 - `build.gradle.kts` - Lightweight Kotlin JVM project (no ReVanced deps yet)
 
