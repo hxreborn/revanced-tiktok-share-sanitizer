@@ -50,3 +50,9 @@ re/*/*.apk
 
 # Upstream repositories (cloned for integration testing)
 re/upstream/
+workspace/upstream/
+workspace/tiktok-*/jar/
+workspace/tiktok-*/dex/
+workspace/tiktok-*/cfr/
+workspace/tiktok-*/apktool/
+workspace/tiktok-*/*.apk
