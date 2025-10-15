@@ -1,0 +1,18 @@
+# ReVanced Build Environment - Locked Versions
+# Update these carefully; changing versions can break fingerprints
+
+# ReVanced CLI version (from https://github.com/ReVanced/revanced-cli/releases)
+REVANCED_CLI_VERSION=5.0.1
+
+# ReVanced Integrations APK version
+# Downloaded from GitHub releases - use latest stable dev version
+REVANCED_INTEGRATIONS_VERSION=1.17.0-dev.6
+
+# Tested TikTok APK version (from https://www.apkmirror.com/apk/tiktok-pte-ltd/tiktok/)
+# Only these versions are guaranteed to work with ShareSanitizer patch
+TIKTOK_VERSIONS="36.5.4"
+
+# Keystore configuration
+KEYSTORE_ALIAS=tiktok-sanitizer
+KEYSTORE_PASSWORD=revanced-tiktok-share-sanitizer
+KEYSTORE_VALIDITY_DAYS=10000

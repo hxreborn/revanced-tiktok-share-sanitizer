@@ -1,0 +1,24 @@
+# Build artifacts - never commit these
+build/
+tools/
+keys/
+
+# APKs
+*.apk
+
+# JARs (except this might be intentional, but generally avoid)
+*.jar
+
+# Gradle cache
+.gradle/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Keep config directory but not sensitive data
+!config/
+config/*.key
+config/*.jks
+config/local.properties
