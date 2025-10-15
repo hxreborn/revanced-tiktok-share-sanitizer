@@ -21,6 +21,7 @@ interface HttpClient {
     data class Config(
         val maxRedirects: Int = 5,
         val timeoutSeconds: Int = 3,
+        val maxRetries: Int = 3,
         val userAgent: String = "TikTok-Share-Sanitizer/1.0"
     )
 }

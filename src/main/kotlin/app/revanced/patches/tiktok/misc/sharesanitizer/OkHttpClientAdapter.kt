@@ -15,13 +15,28 @@ class OkHttpClientAdapter(
     private val config: HttpClient.Config = HttpClient.Config()
 ) : HttpClient {
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(config.timeoutSeconds.toLong(), TimeUnit.SECONDS)
-        .readTimeout(config.timeoutSeconds.toLong(), TimeUnit.SECONDS)
-        .followRedirects(false) // Manual redirect handling for better control
-        .build()
+    companion object {
+        private var sharedClient: OkHttpClient? = null
+        
+        private fun getOrCreateClient(config: HttpClient.Config): OkHttpClient {
+            return sharedClient ?: synchronized(this) {
+                sharedClient ?: OkHttpClient.Builder()
+                    .connectTimeout(config.timeoutSeconds.toLong(), TimeUnit.SECONDS)
+                    .readTimeout(config.timeoutSeconds.toLong(), TimeUnit.SECONDS)
+                    .followRedirects(false) // Manual redirect handling for better control
+                    .build()
+                    .also { sharedClient = it }
+            }
+        }
+    }
+
+    private val client = getOrCreateClient(config)
 
     override fun followRedirects(url: String): Result<String, ExpansionError> {
+        return followRedirectsWithRetry(url, 0)
+    }
+
+    private fun followRedirectsWithRetry(url: String, attempt: Int): Result<String, ExpansionError> {
         var currentUrl = url
         var redirectCount = 0
 
@@ -33,12 +48,12 @@ class OkHttpClientAdapter(
                 // HEAD returned 405, try GET
                 when (val getResult = tryRequest(currentUrl, "GET")) {
                     is Result.Ok -> getResult.value
-                    is Result.Err -> return err(getResult.error)
+                    is Result.Err -> return handleRetry(getResult.error, currentUrl, attempt)
                 }
             } else {
                 when (headResult) {
                     is Result.Ok -> headResult.value
-                    is Result.Err -> return err(headResult.error)
+                    is Result.Err -> return handleRetry(headResult.error, currentUrl, attempt)
                 }
             }
 
@@ -52,6 +67,27 @@ class OkHttpClientAdapter(
         }
 
         return err(ExpansionError.TooManyRedirects(url, config.maxRedirects))
+    }
+
+    private fun handleRetry(error: ExpansionError, url: String, attempt: Int): Result<String, ExpansionError> {
+        // Don't retry on certain errors
+        when (error) {
+            is ExpansionError.TooManyRedirects,
+            is ExpansionError.NoRedirect,
+            is ExpansionError.InvalidResponse,
+            is MethodNotAllowed -> return err(error)
+            
+            is ExpansionError.Timeout,
+            is ExpansionError.NetworkFailure -> {
+                // Retry with exponential backoff
+                if (attempt < config.maxRetries) {
+                    val delayMs = (1000L * (1 shl attempt)).coerceAtMost(10000L) // Max 10 seconds
+                    Thread.sleep(delayMs)
+                    return followRedirectsWithRetry(url, attempt + 1)
+                }
+                return err(error)
+            }
+        }
     }
 
     /**

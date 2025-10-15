@@ -4,20 +4,20 @@ sealed class Result<out T, out E> {
     data class Ok<out T>(val value: T) : Result<T, Nothing>()
     data class Err<out E>(val error: E) : Result<Nothing, E>()
 
-    fun isOk(): Boolean = this is Ok
-    fun isErr(): Boolean = this is Err
+    inline fun isOk(): Boolean = this is Ok
+    inline fun isErr(): Boolean = this is Err
 
-    fun getOrNull(): T? = when (this) {
+    inline fun getOrNull(): T? = when (this) {
         is Ok -> value
         is Err -> null
     }
 
-    fun errorOrNull(): E? = when (this) {
+    inline fun errorOrNull(): E? = when (this) {
         is Ok -> null
         is Err -> error
     }
 
-    fun getOrThrow(): T = when (this) {
+    inline fun getOrThrow(): T = when (this) {
         is Ok -> value
         is Err -> throw ResultException("Result is Err: $error", error)
     }
@@ -27,26 +27,34 @@ sealed class Result<out T, out E> {
      */
     class ResultException(message: String, val error: Any?) : RuntimeException(message)
 
-    fun getOrElse(default: @UnsafeVariance T): @UnsafeVariance T = when (this) {
+    inline fun getOrElse(default: @UnsafeVariance T): @UnsafeVariance T = when (this) {
         is Ok -> value
         is Err -> default
     }
 
-    fun <U> map(transform: (T) -> U): Result<U, E> = when (this) {
+    inline fun <U> map(transform: (T) -> U): Result<U, E> = when (this) {
         is Ok -> Ok(transform(value))
         is Err -> Err(error)
     }
 
-    fun <F> mapErr(transform: (E) -> F): Result<T, F> = when (this) {
+    inline fun <F> mapErr(transform: (E) -> F): Result<T, F> = when (this) {
         is Ok -> Ok(value)
         is Err -> Err(transform(error))
     }
 
-    fun <U> andThen(transform: (T) -> Result<U, @UnsafeVariance E>): Result<U, E> = when (this) {
+    inline fun <U> andThen(transform: (T) -> Result<U, @UnsafeVariance E>): Result<U, E> = when (this) {
         is Ok -> transform(value)
         is Err -> Err(error)
     }
+
+    inline fun <U> fold(
+        onSuccess: (T) -> U,
+        onFailure: (E) -> U
+    ): U = when (this) {
+        is Ok -> onSuccess(value)
+        is Err -> onFailure(error)
+    }
 }
 
-fun <T> ok(value: T): Result<T, Nothing> = Result.Ok(value)
-fun <E> err(error: E): Result<Nothing, E> = Result.Err(error)
+inline fun <T> ok(value: T): Result<T, Nothing> = Result.Ok(value)
+inline fun <E> err(error: E): Result<Nothing, E> = Result.Err(error)

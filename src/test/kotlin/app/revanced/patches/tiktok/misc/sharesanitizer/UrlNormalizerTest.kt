@@ -113,4 +113,52 @@ class UrlNormalizerTest {
             is Result.Err -> assertTrue(result.error is NormalizationError.InvalidFormat)
         }
     }
+
+    @Test
+    fun `returns error on empty username`() {
+        val input = "https://www.tiktok.com/@/video/7123456789012345678"
+
+        when (val result = UrlNormalizer.normalize(input)) {
+            is Result.Ok -> throw AssertionError("Expected Err, got Ok: ${result.value}")
+            is Result.Err -> assertTrue(result.error is NormalizationError.InvalidPath)
+        }
+    }
+
+    @Test
+    fun `returns error on empty video ID`() {
+        val input = "https://www.tiktok.com/@user123/video/"
+
+        when (val result = UrlNormalizer.normalize(input)) {
+            is Result.Ok -> throw AssertionError("Expected Err, got Ok: ${result.value}")
+            is Result.Err -> assertTrue(result.error is NormalizationError.InvalidPath)
+        }
+    }
+
+    @Test
+    fun `returns error on invalid video ID format`() {
+        val input = "https://www.tiktok.com/@user123/video/abc123"
+
+        when (val result = UrlNormalizer.normalize(input)) {
+            is Result.Ok -> throw AssertionError("Expected Err, got Ok: ${result.value}")
+            is Result.Err -> assertTrue(result.error is NormalizationError.InvalidPath)
+        }
+    }
+
+    @Test
+    fun `fold method works correctly`() {
+        val okResult = UrlNormalizer.normalize("https://www.tiktok.com/@user123/video/7123456789012345678")
+        val errResult = UrlNormalizer.normalize("https://youtube.com/watch?v=abc")
+
+        val okValue = okResult.fold(
+            onSuccess = { "success: $it" },
+            onFailure = { "error: $it" }
+        )
+        assertEquals("success: https://www.tiktok.com/@user123/video/7123456789012345678", okValue)
+
+        val errValue = errResult.fold(
+            onSuccess = { "success: $it" },
+            onFailure = { "error: $it" }
+        )
+        assertTrue(errValue.startsWith("error:"))
+    }
 }

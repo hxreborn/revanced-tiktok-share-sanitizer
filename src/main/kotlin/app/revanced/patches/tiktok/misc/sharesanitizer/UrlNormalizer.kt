@@ -47,6 +47,19 @@ object UrlNormalizer {
 
         val (username, videoId) = match.destructured
 
+        // Validate username and video ID are not empty
+        if (username.isBlank()) {
+            return err(NormalizationError.InvalidPath(url, "Empty username in path: ${uri.path}"))
+        }
+        if (videoId.isBlank()) {
+            return err(NormalizationError.InvalidPath(url, "Empty video ID in path: ${uri.path}"))
+        }
+
+        // Validate video ID contains only digits
+        if (!videoId.all { it.isDigit() }) {
+            return err(NormalizationError.InvalidPath(url, "Invalid video ID format: $videoId"))
+        }
+
         // Reconstruct canonical URL (no query, no fragment, no trailing slash)
         return ok("https://www.tiktok.com/@$username/video/$videoId")
     }
