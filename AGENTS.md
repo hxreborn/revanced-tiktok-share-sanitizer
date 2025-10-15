@@ -4,6 +4,7 @@
 - Kotlin sources live under `src/main/kotlin/app/revanced/patches/tiktok/misc/sharesanitizer/`.
 - JVM tests mirror production structure in `src/test/kotlin/app/revanced/patches/tiktok/misc/sharesanitizer/`.
 - `build.gradle.kts` and `settings.gradle.kts` define the standalone module used for incubating the patch before upstreaming.
+- `apk/` stores reference TikTok APKs used for reverse engineering; do not commit them upstream.
 - `instructions.md` captures functional requirements; keep it updated when assumptions change.
 
 ## Build, Test, and Development Commands

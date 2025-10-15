@@ -32,3 +32,6 @@ bin/
 
 # Test outputs
 *.hprof
+
+# Reverse engineered artifacts
+apk/
