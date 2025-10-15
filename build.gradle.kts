@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.22"
+    alias(libs.plugins.kotlin.jvm)
 }
 
 group = "app.revanced.patches.tiktok.misc"
@@ -11,15 +11,10 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation(libs.okhttp)
 
-    // HTTP client
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-
-    // Testing
     testImplementation(kotlin("test"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation(libs.bundles.testing)
 }
 
 tasks.test {
