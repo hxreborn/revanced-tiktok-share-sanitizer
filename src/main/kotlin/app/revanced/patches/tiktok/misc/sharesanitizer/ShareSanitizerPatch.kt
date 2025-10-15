@@ -1,7 +1,9 @@
 package app.revanced.patches.tiktok.misc.sharesanitizer
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
+import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.patch.bytecodePatch
+import app.revanced.patcher.util.smali.ExternalLabel
 import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCopyFingerprint
 
 /**
@@ -37,7 +39,7 @@ import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCop
  * ```kotlin
  * object ShareSanitizerHook {
  *     @JvmStatic
- *     fun sanitizeShareUrl(originalUrl: String, context: Context): String
+ *     fun sanitizeShareUrl(originalUrl: String, context: Context): String?
  * }
  * ```
  *
@@ -46,9 +48,8 @@ import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCop
  * - TikTok 36.5.4 (com.ss.android.ugc.trill) - Expected compatible
  *
  * ## Failure Handling
- * - Network timeout: Returns original URL (fail-safe)
- * - Invalid format: Returns expanded URL if expansion succeeded
- * - Extension shows toast notification on errors
+ * - Sanitizer returns `null` on error → clipboard write is aborted (fail-closed)
+ * - Extension is responsible for showing a user-facing toast with the failure reason
  *
  * @see clipboardCopyFingerprint
  * @see UrlNormalizer
@@ -65,28 +66,22 @@ val shareSanitizerPatch = bytecodePatch(
     )
 
     execute {
-        // Find the clipboard copy method using fingerprint
-        clipboardCopyFingerprint.match(classes).let { result ->
-            result.method.addInstructions(
-                0,  // Inject at method entry, before any processing
-                """
-                    # Original parameters at method entry:
-                    # p0 = this (C98761aTc instance)
-                    # p1 = content (String - the URL to sanitize)
-                    # p2 = context (Context)
-                    # p3 = cert (Cert - BPEA permission system)
-                    # p4 = view (View)
+        // The fingerprint resolves to C98761aTc.LIZLLL(String, Context, Cert, View)
+        val match = clipboardCopyFingerprint.match(classes)
+        val method = match.method
 
-                    # Call our sanitizer extension
-                    # Takes: (String url, Context context) -> String sanitizedUrl
-                    invoke-static {p1, p2}, Lapp/revanced/extension/tiktok/sharesanitizer/ShareSanitizerHook;->sanitizeShareUrl(Ljava/lang/String;Landroid/content/Context;)Ljava/lang/String;
-                    move-result-object p1
+        // Prepare branch target: the original first instruction of the method
+        val firstInstruction = method.instructions.first()
 
-                    # p1 now contains the sanitized URL
-                    # The original method continues with the sanitized URL
-                    # ClipData.newPlainText(p1, p1) will use our clean URL
-                """
-            )
-        }
+        method.addInstructionsWithLabels(
+            0,
+            """
+                invoke-static {p1, p2}, Lapp/revanced/extension/tiktok/sharesanitizer/ShareSanitizerHook;->sanitizeShareUrl(Ljava/lang/String;Landroid/content/Context;)Ljava/lang/String;
+                move-result-object p1
+                if-nez p1, :share_sanitizer_continue
+                return-void
+            """.trimIndent(),
+            ExternalLabel("share_sanitizer_continue", firstInstruction),
+        )
     }
 }
