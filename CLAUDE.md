@@ -57,14 +57,14 @@ open build/reports/tests/test/index.html
 
 - **Phase 1** ✅: Minimal Gradle scaffold with Java 17 toolchain
 - **Phase 2** ✅: URL normalization logic with comprehensive tests (10 tests, 100% passing)
-- **Phase 3** (in progress): HTTP client abstraction + shortlink expansion
+- **Phase 3** ✅: HTTP client abstraction + shortlink expansion (11 tests, OkHttp 4.12.0)
 - **Phase 4** (blocked): ReVanced integration (requires reverse engineering TikTok APK)
 
 ## Design Constraints
 
 **Fail-Closed Philosophy**: If any sanitization step fails (expansion timeout, invalid format, network error), the patch must block the share action and show a toast. Never fall back to unsanitized URLs.
 
-**No Upstream Dependencies Yet**: Current implementation uses only Kotlin stdlib and Java URI utilities. OkHttp and ReVanced Patcher dependencies will be added in Phase 3.
+**Standalone Incubator Pattern**: This repo uses a separate Gradle project for rapid iteration. Before upstream PR, sources must be transplanted into `revanced-patches/patches/src/main|test/kotlin/` without the local build scaffold.
 
 **Testing Strategy**: JVM unit tests with MockWebServer for HTTP layer. Integration tests with ReVanced runtime simulation will come later. Manual APK validation against specific TikTok build versions required before upstream PR.
 
@@ -109,6 +109,30 @@ chore: update deps
 ```
 feat(api)!: drop legacy v1 routes
 ```
+
+## Upstream Integration Strategy
+
+**Critical Context**: ReVanced uses a monorepo structure. All TikTok patches live in `revanced-patches/patches/src/main/kotlin/app/revanced/patches/tiktok/`. This standalone repo is an incubator only.
+
+**Main Gaps vs Upstream:**
+1. **Separate Gradle project**: Must drop `build.gradle.kts`/`settings.gradle.kts` and merge into patches module
+2. **Missing patch wiring**: Need `ShareSanitizerPatch.kt` with `bytecodePatch { }` declaration, fingerprints, compatibility metadata
+3. **No settings integration**: Must extend existing TikTok settings categories/resources (see `patches/...tiktok/misc/settings/`)
+4. **No patch registration**: CLI/Manager won't surface this without proper registration in upstream module
+
+**Migration Checklist:**
+- [ ] Keep package path `app.revanced.patches.tiktok.misc.sharesanitizer.*` (already aligned)
+- [ ] Create `ShareSanitizerPatch.kt` with fingerprints + bytecode hooks
+- [ ] Add compatibility annotations for tested TikTok versions
+- [ ] Integrate with existing TikTok settings UI (`SettingsPatch`)
+- [ ] Write export script to copy only Kotlin sources/tests (exclude Gradle scaffold)
+- [ ] Document reverse engineering findings for hook points
+- [ ] Add patch description strings for ReVanced Manager UI
+
+**Quick Wins:**
+- Package structure already matches upstream (`app.revanced.patches.tiktok.misc.*`)
+- Tests are portable - can lift directly into `patches/src/test/kotlin/`
+- Core logic (UrlNormalizer, ShortlinkExpander) is decoupled and ready
 
 ## Important Notes
 
