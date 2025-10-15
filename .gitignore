@@ -56,3 +56,4 @@ workspace/tiktok-*/dex/
 workspace/tiktok-*/cfr/
 workspace/tiktok-*/apktool/
 workspace/tiktok-*/*.apk
+.mcp
