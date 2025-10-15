@@ -19,8 +19,13 @@ sealed class Result<out T, out E> {
 
     fun getOrThrow(): T = when (this) {
         is Ok -> value
-        is Err -> throw RuntimeException("Result is Err: $error")
+        is Err -> throw ResultException("Result is Err: $error", error)
     }
+
+    /**
+     * Exception thrown by getOrThrow() when Result is Err.
+     */
+    class ResultException(message: String, val error: Any?) : RuntimeException(message)
 
     fun getOrElse(default: @UnsafeVariance T): @UnsafeVariance T = when (this) {
         is Ok -> value
