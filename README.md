@@ -7,13 +7,17 @@ A standalone incubator for a ReVanced patch that removes tracking parameters fro
 - ✅ **Phase 1**: Gradle/Kotlin scaffold with Java 17 toolchain
 - ✅ **Phase 2**: URL normalization (10 tests, 100% passing)
 - ✅ **Phase 3**: HTTP shortlink expansion (21 tests total, OkHttp 4.12.0)
-- ⏳ **Phase 4**: ReVanced patch integration (blocked on reverse engineering)
+- ✅ **Phase 4a**: Reverse engineering complete (hook points identified)
+- ✅ **Phase 4b**: Patch implementation (bytecode injection ready)
+- ✅ **Phase 4c**: Settings integration (structure complete)
+- ⏳ **Phase 4d**: Upstream migration and APK testing
 
-**Current Test Suite:** 21/21 passing (1.5s)
+**Current Test Suite:** 36/36 passing (<2s)
 
 - `UrlNormalizerTest`: 10 tests
 - `ShortlinkExpanderTest`: 4 tests
 - `OkHttpClientAdapterTest`: 7 tests
+- `ShareSanitizerHookTest`: 15 tests
 
 ## What It Does
 
@@ -100,12 +104,13 @@ See [`docs/UPSTREAM_MIGRATION.md`](docs/UPSTREAM_MIGRATION.md) for detailed migr
 - [x] >80% test coverage (achieved: 100%)
 
 ### Upstream Integration (Remaining)
-- [ ] Document reverse engineering findings (`docs/REVERSE_ENGINEERING.md`)
-- [ ] Create `ShareSanitizerPatch.kt` with fingerprints + hooks
-- [ ] Integrate with existing TikTok settings UI
-- [ ] Add compatibility annotations for tested TikTok versions
+- [x] Document reverse engineering findings (`docs/REVERSE_ENGINEERING.md`)
+- [x] Create `ShareSanitizerPatch.kt` with fingerprints + hooks
+- [x] Integrate with existing TikTok settings UI (structure ready)
+- [x] Add compatibility annotations for tested TikTok versions
+- [x] Manual APK testing protocol (`docs/TESTING.md`)
 - [ ] Write export script to copy sources to upstream
-- [ ] Manual APK testing protocol (`docs/TESTING.md`)
+- [ ] Test with real TikTok APK (see `docs/TESTING.md`)
 
 ## Key Design Decisions
 
