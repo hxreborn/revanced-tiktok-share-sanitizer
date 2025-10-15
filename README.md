@@ -1,53 +1,39 @@
 # ReVanced TikTok Share Sanitizer
 
-Minimal Kotlin module that sanitizes TikTok share links by removing tracking parameters and normalizing URLs to their canonical form.
+Kotlin module that sanitizes TikTok share links by removing tracking parameters and normalizing to canonical form: `https://www.tiktok.com/@USER/video/ID`
 
-## Core Functionality
+## Features
 
-Sanitizes TikTok share links by:
-1. **Expanding shortlinks** (`vm.tiktok.com`, `vt.tiktok.com`) via HTTP redirect following
-2. **Normalizing URLs** to canonical form: `https://www.tiktok.com/@USER/video/ID`
-3. **Stripping tracking** (query parameters, fragments)
-4. **Failing closed** - blocks share if sanitization fails
+- Expands shortlinks (`vm.tiktok.com`, `vt.tiktok.com`) via redirect following
+- Normalizes all TikTok URL variants to canonical format
+- Strips tracking parameters and URL fragments
+- Fails closed - blocks share on sanitization errors
 
-## Project Structure
-
-```
-src/main/kotlin/app/revanced/patches/tiktok/misc/sharesanitizer/
-├── UrlNormalizer.kt          # Pure URL parsing/normalization
-├── HttpClient.kt             # HTTP abstraction interface
-├── OkHttpClientAdapter.kt    # OkHttp implementation
-└── ShortlinkExpander.kt      # Shortlink expansion with HTTP
-
-src/test/kotlin/.../sharesanitizer/
-├── UrlNormalizerTest.kt      # URL normalization tests
-├── OkHttpClientAdapterTest.kt # HTTP layer tests
-├── ShortlinkExpanderTest.kt  # Shortlink expansion tests
-└── ShareSanitizerHookTest.kt # Patch hook tests
-```
-
-## Build & Test
+## Quick Start
 
 ```bash
-# Run all tests
-gradle test
-
-# Build
-gradle build
-
-# View test report
-open build/reports/tests/test/index.html
+gradle test    # Run 21 unit tests
+gradle build   # Compile and package
 ```
 
-## Key Files
+## Structure
 
-- **CLAUDE.md** - Coding guidelines for this repository
-- **AGENTS.md** - Agent and developer guidance
-- **LICENSE** - GPLv3 license
+```
+src/main/kotlin/.../sharesanitizer/
+├── UrlNormalizer.kt       # URL parsing/normalization
+├── ShortlinkExpander.kt   # HTTP redirect resolution
+└── OkHttpClientAdapter.kt # HTTP client implementation
 
-## Dependencies
+src/test/kotlin/.../sharesanitizer/
+└── *Test.kt               # 21 JUnit tests (100% passing)
+```
 
-- `kotlin-stdlib` (JVM 17)
-- `okhttp:4.12.0` (runtime)
-- `mockwebserver:4.12.0` (test only)
-- `junit-jupiter:5.10.1` (test only)
+## Requirements
+
+- Java 17 (configured in `gradle.properties`)
+- Kotlin stdlib + OkHttp 4.12.0
+
+## Documentation
+
+- **CLAUDE.md** - Development guidelines and architecture
+- **LICENSE** - GPLv3
