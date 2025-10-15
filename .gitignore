@@ -79,31 +79,11 @@ Desktop.ini
 *.swo
 *~
 
-# APK files (for testing)
-*.apk
-
-# TikTok temporary files
-revanced-tiktok-temporary-files/
-apk/revanced-tiktok-temporary-files/
-
-# Build artifacts
-build-fixes/
-
-# APK analysis and patching artifacts
-apk/
-apktool/
-*.apk
-*.keystore
-*.rvp
-
-# Workspace and analysis files
-workspace/
-*.cfr/
-*.dex/
-*.jar/
-
 # Local configuration
 local.properties
 
 # MCP configuration
 .mcp/
+
+# Claude IDE configuration
+.claude/
