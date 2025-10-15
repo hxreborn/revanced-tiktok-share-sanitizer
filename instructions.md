@@ -1,5 +1,7 @@
 # ReVanced TikTok Share Sanitizer – Project Instructions
 
+> **Note:** This is the **canonical requirements document** for the project. For current implementation status and build instructions, see [README.md](README.md).
+
 ## Goal
 Deliver a ReVanced patch that sanitizes TikTok share links so only canonical, privacy-safe URLs reach the clipboard or downstream apps.
 
@@ -53,9 +55,12 @@ Deliver a ReVanced patch that sanitizes TikTok share links so only canonical, pr
   - Include changelog entry, integration tests, and documentation updates.
 - `instructions.md` (this file) kept in sync with project evolution.
 
-## Next steps
-1. Scaffold the standalone repo: Gradle setup, package naming, baseline tests.
-2. Document TikTok share flow entry points and target methods.
-3. Implement URL expansion and normalization utilities with tests.
-4. Integrate hooks, settings toggle, and clipboard override.
-5. Run end-to-end validation; tag version with tested TikTok build number.
+## Implementation Status
+
+**Phases 1-3 Complete (see README.md for current status):**
+- ✅ Gradle scaffold, URL normalization, HTTP expansion (21 tests passing)
+
+**Remaining (Phase 4):**
+1. Document TikTok share flow entry points and target methods → `docs/REVERSE_ENGINEERING.md`
+2. Integrate hooks, settings toggle, and clipboard override → `ShareSanitizerPatch.kt`
+3. Run end-to-end validation; tag version with tested TikTok build number
