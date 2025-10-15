@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Share Sanitizer Settings -->
+    <string name="revanced_tiktok_share_sanitizer_category_title">共有リンクのサニタイザー</string>
+    <string name="revanced_tiktok_share_sanitizer_category_summary">プライバシー重視のリンク共有</string>
+
+    <string name="revanced_tiktok_share_sanitizer_enabled_title">共有リンクをサニタイズ</string>
+    <string name="revanced_tiktok_share_sanitizer_enabled_summary">共有TikTokリンクから追跡パラメータを削除</string>
+
+    <string name="revanced_tiktok_share_sanitizer_append_message_title">プライバシーメッセージを追加</string>
+    <string name="revanced_tiktok_share_sanitizer_append_message_summary">共有リンクに\'追跡を削除しました\'を追加</string>
+
+    <!-- Toast Messages -->
+    <string name="revanced_tiktok_share_sanitizer_empty_url">共有失敗: URLが空です</string>
+    <string name="revanced_tiktok_share_sanitizer_error_prefix">共有失敗:</string>
+
+    <!-- Privacy Message -->
+    <string name="revanced_tiktok_share_sanitizer_privacy_message">\n\n追跡を削除しました</string>
+
+    <!-- Error Messages -->
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_format">無効なURL形式</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_url">無効なURL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_not_tiktok">TikTok URLではありません</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_path">無効なTikTok動画URL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_network">ネットワークエラー</string>
+    <string name="revanced_tiktok_share_sanitizer_error_timeout">リクエストタイムアウト</string>
+    <string name="revanced_tiktok_share_sanitizer_error_too_many_redirects">リダイレクトが多すぎます</string>
+    <string name="revanced_tiktok_share_sanitizer_error_no_redirect">短縮リンクの展開に失敗</string>
+    <string name="revanced_tiktok_share_sanitizer_error_server">サーバーエラー</string>
+    <string name="revanced_tiktok_share_sanitizer_error_unknown">URLのサニタイズエラー</string>
+</resources>

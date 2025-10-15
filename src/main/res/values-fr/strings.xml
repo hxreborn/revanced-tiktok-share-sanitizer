@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Share Sanitizer Settings -->
+    <string name="revanced_tiktok_share_sanitizer_category_title">Nettoyeur de Liens Partagés</string>
+    <string name="revanced_tiktok_share_sanitizer_category_summary">Partage de liens axé sur la confidentialité</string>
+
+    <string name="revanced_tiktok_share_sanitizer_enabled_title">Nettoyer les liens partagés</string>
+    <string name="revanced_tiktok_share_sanitizer_enabled_summary">Supprimer les paramètres de suivi des liens partagés TikTok</string>
+
+    <string name="revanced_tiktok_share_sanitizer_append_message_title">Ajouter un message de confidentialité</string>
+    <string name="revanced_tiktok_share_sanitizer_append_message_summary">Ajouter \'Suivi supprimé\' aux liens partagés</string>
+
+    <!-- Toast Messages -->
+    <string name="revanced_tiktok_share_sanitizer_empty_url">Échec du partage : URL vide</string>
+    <string name="revanced_tiktok_share_sanitizer_error_prefix">Échec du partage :</string>
+
+    <!-- Privacy Message -->
+    <string name="revanced_tiktok_share_sanitizer_privacy_message">\n\nSuivi supprimé</string>
+
+    <!-- Error Messages -->
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_format">Format d\'URL invalide</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_url">URL invalide</string>
+    <string name="revanced_tiktok_share_sanitizer_error_not_tiktok">Ce n\'est pas une URL TikTok</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_path">URL de vidéo TikTok invalide</string>
+    <string name="revanced_tiktok_share_sanitizer_error_network">Erreur réseau</string>
+    <string name="revanced_tiktok_share_sanitizer_error_timeout">Délai d\'attente dépassé</string>
+    <string name="revanced_tiktok_share_sanitizer_error_too_many_redirects">Trop de redirections</string>
+    <string name="revanced_tiktok_share_sanitizer_error_no_redirect">Échec de l\'expansion du lien court</string>
+    <string name="revanced_tiktok_share_sanitizer_error_server">Erreur serveur</string>
+    <string name="revanced_tiktok_share_sanitizer_error_unknown">Erreur lors du nettoyage de l\'URL</string>
+</resources>

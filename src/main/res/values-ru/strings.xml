@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Share Sanitizer Settings -->
+    <string name="revanced_tiktok_share_sanitizer_category_title">Очистка Общих Ссылок</string>
+    <string name="revanced_tiktok_share_sanitizer_category_summary">Обмен ссылками с фокусом на приватность</string>
+
+    <string name="revanced_tiktok_share_sanitizer_enabled_title">Очищать общие ссылки</string>
+    <string name="revanced_tiktok_share_sanitizer_enabled_summary">Удалять параметры отслеживания из общих ссылок TikTok</string>
+
+    <string name="revanced_tiktok_share_sanitizer_append_message_title">Добавить приватное сообщение</string>
+    <string name="revanced_tiktok_share_sanitizer_append_message_summary">Добавить \'Отслеживание удалено\' к общим ссылкам</string>
+
+    <!-- Toast Messages -->
+    <string name="revanced_tiktok_share_sanitizer_empty_url">Ошибка обмена: пустая URL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_prefix">Ошибка обмена:</string>
+
+    <!-- Privacy Message -->
+    <string name="revanced_tiktok_share_sanitizer_privacy_message">\n\nОтслеживание удалено</string>
+
+    <!-- Error Messages -->
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_format">Неверный формат URL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_url">Неверный URL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_not_tiktok">Не URL TikTok</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_path">Неверный URL видео TikTok</string>
+    <string name="revanced_tiktok_share_sanitizer_error_network">Ошибка сети</string>
+    <string name="revanced_tiktok_share_sanitizer_error_timeout">Время ожидания истекло</string>
+    <string name="revanced_tiktok_share_sanitizer_error_too_many_redirects">Слишком много перенаправлений</string>
+    <string name="revanced_tiktok_share_sanitizer_error_no_redirect">Не удалось расширить короткую ссылку</string>
+    <string name="revanced_tiktok_share_sanitizer_error_server">Ошибка сервера</string>
+    <string name="revanced_tiktok_share_sanitizer_error_unknown">Ошибка очистки URL</string>
+</resources>

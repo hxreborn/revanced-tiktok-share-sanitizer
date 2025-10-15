@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Share Sanitizer Settings -->
+    <string name="revanced_tiktok_share_sanitizer_category_title">分享链接清理器</string>
+    <string name="revanced_tiktok_share_sanitizer_category_summary">注重隐私的链接分享</string>
+
+    <string name="revanced_tiktok_share_sanitizer_enabled_title">清理分享链接</string>
+    <string name="revanced_tiktok_share_sanitizer_enabled_summary">从分享的TikTok链接中移除跟踪参数</string>
+
+    <string name="revanced_tiktok_share_sanitizer_append_message_title">添加隐私消息</string>
+    <string name="revanced_tiktok_share_sanitizer_append_message_summary">在分享链接后附加\'已移除跟踪\'</string>
+
+    <!-- Toast Messages -->
+    <string name="revanced_tiktok_share_sanitizer_empty_url">分享失败：URL为空</string>
+    <string name="revanced_tiktok_share_sanitizer_error_prefix">分享失败：</string>
+
+    <!-- Privacy Message -->
+    <string name="revanced_tiktok_share_sanitizer_privacy_message">\n\n已移除跟踪</string>
+
+    <!-- Error Messages -->
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_format">无效的URL格式</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_url">无效的URL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_not_tiktok">不是TikTok URL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_invalid_path">无效的TikTok视频URL</string>
+    <string name="revanced_tiktok_share_sanitizer_error_network">网络错误</string>
+    <string name="revanced_tiktok_share_sanitizer_error_timeout">请求超时</string>
+    <string name="revanced_tiktok_share_sanitizer_error_too_many_redirects">重定向过多</string>
+    <string name="revanced_tiktok_share_sanitizer_error_no_redirect">展开短链接失败</string>
+    <string name="revanced_tiktok_share_sanitizer_error_server">服务器错误</string>
+    <string name="revanced_tiktok_share_sanitizer_error_unknown">URL清理错误</string>
+</resources>

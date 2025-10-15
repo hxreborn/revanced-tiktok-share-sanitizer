@@ -13,16 +13,16 @@ package app.revanced.patches.tiktok.misc.sharesanitizer
  * - **Type**: Boolean
  * - **Default**: true
  * - **Purpose**: Master toggle for the sanitizer patch
- * - **UI Label**: "Sanitize share links"
- * - **UI Description**: "Remove tracking parameters from shared TikTok links"
+ * - **UI Label**: StringResources.ENABLED_TITLE
+ * - **UI Description**: StringResources.ENABLED_SUMMARY
  *
  * ### revanced_tiktok_share_sanitizer_append_message
  * - **Type**: Boolean
  * - **Default**: false
  * - **Purpose**: Append privacy message to sanitized URLs
- * - **UI Label**: "Add privacy message"
- * - **UI Description**: "Append 'Sanitized: tracking removed' to shared links"
- * - **Message Text**: "\n\nSanitized: tracking removed"
+ * - **UI Label**: StringResources.APPEND_MESSAGE_TITLE
+ * - **UI Description**: StringResources.APPEND_MESSAGE_SUMMARY
+ * - **Message Text**: StringResources.PRIVACY_MESSAGE
  *
  * ## Integration Notes
  *
@@ -61,20 +61,22 @@ object Settings {
     /**
      * UI strings for settings menu.
      * These will be used when creating the settings UI in revanced-integrations.
+     * NOTE: These strings now reference StringResources for centralization.
      */
     object UI {
-        const val CATEGORY_TITLE = "Share Sanitizer"
-        const val CATEGORY_SUMMARY = "Privacy-focused link sharing"
+        const val CATEGORY_TITLE = StringResources.CATEGORY_TITLE
+        const val CATEGORY_SUMMARY = StringResources.CATEGORY_SUMMARY
 
-        const val ENABLED_TITLE = "Sanitize share links"
-        const val ENABLED_SUMMARY = "Remove tracking parameters from shared TikTok links"
+        const val ENABLED_TITLE = StringResources.ENABLED_TITLE
+        const val ENABLED_SUMMARY = StringResources.ENABLED_SUMMARY
 
-        const val APPEND_MESSAGE_TITLE = "Add privacy message"
-        const val APPEND_MESSAGE_SUMMARY = "Append 'Sanitized: tracking removed' to shared links"
+        const val APPEND_MESSAGE_TITLE = StringResources.APPEND_MESSAGE_TITLE
+        const val APPEND_MESSAGE_SUMMARY = StringResources.APPEND_MESSAGE_SUMMARY
     }
 
     /**
      * The message appended to sanitized URLs when enabled.
+     * NOTE: This now references StringResources for centralization.
      */
-    const val PRIVACY_MESSAGE = "\n\nSanitized: tracking removed"
+    const val PRIVACY_MESSAGE = StringResources.PRIVACY_MESSAGE
 }

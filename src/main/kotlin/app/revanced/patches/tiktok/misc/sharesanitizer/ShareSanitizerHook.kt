@@ -58,7 +58,7 @@ object ShareSanitizerHook {
     fun sanitizeShareUrl(originalUrl: String?, context: Any?): String? {
         // Validate inputs
         if (originalUrl.isNullOrBlank()) {
-            showToast(context, "Share failed: empty URL")
+            showToast(context, StringResources.EMPTY_URL_ERROR)
             return null
         }
 
@@ -86,7 +86,7 @@ object ShareSanitizerHook {
                 sanitized
             }
         } catch (e: Exception) {
-            showToast(context, "Share failed: ${e.message}")
+            showToast(context, "${StringResources.ERROR_PREFIX} ${e.message}")
             null
         }
     }

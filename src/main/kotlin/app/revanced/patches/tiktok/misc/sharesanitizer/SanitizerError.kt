@@ -57,21 +57,9 @@ sealed class SanitizerError(val message: String) {
 
     /**
      * Returns a short user-friendly message suitable for toasts.
+     * Now uses StringResources for centralized localization.
      */
-    fun toToastMessage(): String = when (this) {
-        is NormalizationError.InvalidFormat -> "Invalid URL format"
-        is NormalizationError.NoHost -> "Invalid URL"
-        is NormalizationError.NotTikTok -> "Not a TikTok URL"
-        is NormalizationError.InvalidPath -> "Invalid TikTok video URL"
-        is ExpansionError.NetworkFailure -> "Network error"
-        is ExpansionError.Timeout -> "Request timeout"
-        is ExpansionError.TooManyRedirects -> "Too many redirects"
-        is ExpansionError.NoRedirect -> "Failed to expand short link"
-        is ExpansionError.InvalidResponse -> "Server error"
-        is HttpError.RequestFailed -> "Network error"
-        is HttpError.IOError -> "Network error"
-        else -> "Error sanitizing URL" // Catch-all for internal errors
-    }
+    fun toToastMessage(): String = StringResources.getErrorMessage(this)
 
     override fun toString(): String = message
 }
