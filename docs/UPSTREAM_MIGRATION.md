@@ -2,6 +2,8 @@
 
 This document outlines the strategy for migrating this standalone incubator into the official `revanced-patches` monorepo.
 
+> **Fork Tracking**: See [FORK_TRACKING.md](FORK_TRACKING.md) for forked repository details, branch names, and sync workflows.
+
 ## Context
 
 ReVanced maintains all Android patches in a single monorepo at `github.com/ReVanced/revanced-patches`. TikTok patches live under `patches/src/main/kotlin/app/revanced/patches/tiktok/`. This standalone repo is intentionally separate to enable rapid iteration without upstream build/CI overhead.
