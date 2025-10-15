@@ -63,4 +63,6 @@ Deliver a ReVanced patch that sanitizes TikTok share links so only canonical, pr
 **Remaining (Phase 4):**
 1. Document TikTok share flow entry points and target methods → `docs/REVERSE_ENGINEERING.md`
 2. Integrate hooks, settings toggle, and clipboard override → `ShareSanitizerPatch.kt`
+   - [x] Copy-link bytecode hook with fail-closed sanitizer injection
+   - [ ] Settings toggle wiring & extension plumbing
 3. Run end-to-end validation; tag version with tested TikTok build number

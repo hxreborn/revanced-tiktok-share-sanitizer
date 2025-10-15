@@ -255,8 +255,10 @@ Based on findings above, the complete patch implementation:
 ```kotlin
 package app.revanced.patches.tiktok.misc.sharesanitizer
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
+import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.patch.bytecodePatch
+import app.revanced.patcher.util.smali.ExternalLabel
 import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCopyFingerprint
 
 val shareSanitizerPatch = bytecodePatch(
@@ -271,21 +273,19 @@ val shareSanitizerPatch = bytecodePatch(
     execute {
         // Find the clipboard copy method C98761aTc.LIZLLL
         val clipboardMethod = clipboardCopyFingerprint.match(classes).method
+        val entryInstruction = clipboardMethod.instructions.first()
 
         // Inject sanitization hook at method entry (index 0)
         // Parameters: p0 = this, p1 = content (URL), p2 = context, p3 = cert, p4 = view
-        clipboardMethod.addInstructions(
+        clipboardMethod.addInstructionsWithLabels(
             0,  // Inject at very start of method
             """
-                # p1 contains the original URL string
-                # p2 contains the Android Context
-                # Call our sanitizer extension
                 invoke-static {p1, p2}, Lapp/revanced/extension/tiktok/sharesanitizer/ShareSanitizerHook;->sanitizeShareUrl(Ljava/lang/String;Landroid/content/Context;)Ljava/lang/String;
                 move-result-object p1
-
-                # p1 now contains the sanitized URL
-                # The rest of the original method will use the sanitized URL
-            """
+                if-nez p1, :share_sanitizer_continue
+                return-void
+            """,
+            ExternalLabel("share_sanitizer_continue", entryInstruction),
         )
     }
 }
@@ -293,8 +293,8 @@ val shareSanitizerPatch = bytecodePatch(
 
 **Key Design Points:**
 1. **Injection at index 0**: Before any parameter validation or processing
-2. **Non-blocking**: If sanitization fails, extension returns original URL (fail-safe, not fail-closed per design)
-3. **Transparent**: Original method logic unchanged, just p1 (URL param) is transformed
+2. **Fail-closed**: Sanitizer returning `null` aborts the share before the clipboard write runs
+3. **Transparent**: Original method logic continues with sanitized `p1`
 4. **Context-aware**: Pass context to extension for toast notifications
 
 ---
