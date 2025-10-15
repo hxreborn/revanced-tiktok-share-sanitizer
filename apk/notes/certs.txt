@@ -1,0 +1,4 @@
+# TikTok APK Signing Certificate
+
+Note: Run `apksigner verify --print-certs apk/orig/*.apk > apk/notes/certs.txt` if Android SDK tools are available.
+For now, certificate details can be viewed in JADX GUI under "Certificate" tab.

@@ -1,0 +1,8 @@
+# TikTok APK Metadata
+
+Package: com.zhiliaoapp.musically
+Version: 36.5.4
+Platform: Android
+
+Note: Run `aapt dump badging apk/orig/*.apk > apk/notes/aapt.txt` if Android SDK tools are available.
+For now, use JADX GUI to view AndroidManifest.xml details.
