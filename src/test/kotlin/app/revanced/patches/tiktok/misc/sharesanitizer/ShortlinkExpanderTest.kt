@@ -1,5 +1,6 @@
 package app.revanced.patches.tiktok.misc.sharesanitizer
 
+import app.revanced.patches.tiktok.misc.sharesanitizer.SanitizerError.ExpansionError
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -9,9 +10,9 @@ class ShortlinkExpanderTest {
     private class MockHttpClient(private val destination: String) : HttpClient {
         var callCount = 0
 
-        override fun followRedirects(url: String): String {
+        override fun followRedirects(url: String): Result<String, ExpansionError> {
             callCount++
-            return destination
+            return ok(destination)
         }
     }
 
@@ -21,10 +22,13 @@ class ShortlinkExpanderTest {
         val mockClient = MockHttpClient(destination)
         val expander = ShortlinkExpander(mockClient)
 
-        val result = expander.expand("https://vm.tiktok.com/abc123")
-
-        assertEquals(destination, result)
-        assertEquals(1, mockClient.callCount, "Should call HTTP client for vm.tiktok.com")
+        when (val result = expander.expand("https://vm.tiktok.com/abc123")) {
+            is Result.Ok -> {
+                assertEquals(destination, result.value)
+                assertEquals(1, mockClient.callCount, "Should call HTTP client for vm.tiktok.com")
+            }
+            is Result.Err -> throw AssertionError("Expected Ok, got Err: ${result.error}")
+        }
     }
 
     @Test
@@ -33,10 +37,13 @@ class ShortlinkExpanderTest {
         val mockClient = MockHttpClient(destination)
         val expander = ShortlinkExpander(mockClient)
 
-        val result = expander.expand("https://vt.tiktok.com/xyz789")
-
-        assertEquals(destination, result)
-        assertEquals(1, mockClient.callCount, "Should call HTTP client for vt.tiktok.com")
+        when (val result = expander.expand("https://vt.tiktok.com/xyz789")) {
+            is Result.Ok -> {
+                assertEquals(destination, result.value)
+                assertEquals(1, mockClient.callCount, "Should call HTTP client for vt.tiktok.com")
+            }
+            is Result.Err -> throw AssertionError("Expected Ok, got Err: ${result.error}")
+        }
     }
 
     @Test
@@ -45,10 +52,14 @@ class ShortlinkExpanderTest {
         val expander = ShortlinkExpander(mockClient)
 
         val regularUrl = "https://www.tiktok.com/@user123/video/7123456789012345678"
-        val result = expander.expand(regularUrl)
 
-        assertEquals(regularUrl, result)
-        assertEquals(0, mockClient.callCount, "Should not call HTTP client for www.tiktok.com")
+        when (val result = expander.expand(regularUrl)) {
+            is Result.Ok -> {
+                assertEquals(regularUrl, result.value)
+                assertEquals(0, mockClient.callCount, "Should not call HTTP client for www.tiktok.com")
+            }
+            is Result.Err -> throw AssertionError("Expected Ok, got Err: ${result.error}")
+        }
     }
 
     @Test
@@ -57,9 +68,13 @@ class ShortlinkExpanderTest {
         val expander = ShortlinkExpander(mockClient)
 
         val externalUrl = "https://youtube.com/watch?v=abc"
-        val result = expander.expand(externalUrl)
 
-        assertEquals(externalUrl, result)
-        assertEquals(0, mockClient.callCount, "Should not call HTTP client for non-TikTok URLs")
+        when (val result = expander.expand(externalUrl)) {
+            is Result.Ok -> {
+                assertEquals(externalUrl, result.value)
+                assertEquals(0, mockClient.callCount, "Should not call HTTP client for non-TikTok URLs")
+            }
+            is Result.Err -> throw AssertionError("Expected Ok, got Err: ${result.error}")
+        }
     }
 }
