@@ -33,5 +33,17 @@ bin/
 # Test outputs
 *.hprof
 
-# Reverse engineered artifacts
-apk/
+# Reverse engineering artifacts (selective ignore)
+apk/*.apk
+apk/orig/
+apk/src/
+apk/apktool/
+apk/notes/lib/
+apk/notes/dex/
+
+# Alternative RE workspace (dex2jar + CFR)
+re/*/dex/
+re/*/jar/
+re/*/cfr/
+re/*/apktool/
+re/*/*.apk
