@@ -61,8 +61,11 @@ Deliver a ReVanced patch that sanitizes TikTok share links so only canonical, pr
 - ✅ Gradle scaffold, URL normalization, HTTP expansion (21 tests passing)
 
 **Remaining (Phase 4):**
-1. Document TikTok share flow entry points and target methods → `docs/REVERSE_ENGINEERING.md`
+1. ✅ Document TikTok share flow entry points and target methods → `docs/REVERSE_ENGINEERING.md`
 2. Integrate hooks, settings toggle, and clipboard override → `ShareSanitizerPatch.kt`
    - [x] Copy-link bytecode hook with fail-closed sanitizer injection
-   - [ ] Settings toggle wiring & extension plumbing
+   - [x] Settings structure and integration layer (Settings.kt, ShareSanitizerSettings.kt)
+   - [x] ShareSanitizerHook with settings support and 15 passing tests
+   - [ ] Upstream SharedPreferences wiring (requires revanced-integrations)
+   - [ ] SettingsPatch dependency and UI integration
 3. Run end-to-end validation; tag version with tested TikTok build number

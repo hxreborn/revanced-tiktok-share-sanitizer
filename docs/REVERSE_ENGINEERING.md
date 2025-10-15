@@ -261,6 +261,101 @@ return-void
 
 ---
 
+## Settings Integration
+
+### Settings Structure
+
+The patch exposes two user-configurable settings for privacy control:
+
+#### 1. Master Toggle: `revanced_tiktok_share_sanitizer_enabled`
+- **Type:** Boolean
+- **Default:** `true`
+- **Purpose:** Enable/disable the entire sanitization pipeline
+- **Behavior:**
+  - When `true`: URLs are sanitized (expand → normalize → strip tracking)
+  - When `false`: URLs pass through unchanged to clipboard
+- **UI Label:** "Sanitize share links"
+- **UI Description:** "Remove tracking parameters from shared TikTok links"
+
+#### 2. Privacy Message: `revanced_tiktok_share_sanitizer_append_message`
+- **Type:** Boolean
+- **Default:** `false`
+- **Purpose:** Append transparency message to sanitized URLs
+- **Message Text:** `"\n\nSanitized: tracking removed"`
+- **UI Label:** "Add privacy message"
+- **UI Description:** "Append 'Sanitized: tracking removed' to shared links"
+
+### Implementation Files
+
+**Standalone Incubator:**
+```
+src/main/kotlin/.../sharesanitizer/
+├── Settings.kt                  # Setting key constants and UI strings
+├── ShareSanitizerSettings.kt    # Settings access layer (mock impl)
+└── ShareSanitizerHook.kt        # Consumes settings in sanitization pipeline
+```
+
+**Upstream Integration (revanced-integrations):**
+```kotlin
+// app/src/main/java/app/revanced/extension/tiktok/settings/Settings.kt
+enum class Settings(val key: String, val defaultValue: Any) {
+    SHARE_SANITIZER_ENABLED("revanced_tiktok_share_sanitizer_enabled", true),
+    SHARE_SANITIZER_APPEND_MESSAGE("revanced_tiktok_share_sanitizer_append_message", false);
+
+    val boolean: Boolean
+        get() = SharedPrefHelper.getBoolean(key, defaultValue as Boolean)
+}
+```
+
+### Settings UI Integration
+
+To wire settings into TikTok's settings menu, the upstream integration must:
+
+1. **Depend on SettingsPatch:**
+   ```kotlin
+   val shareSanitizerPatch = bytecodePatch(...) {
+       dependsOn(settingsPatch)
+       // ...
+   }
+   ```
+
+2. **Add Preferences to Settings Activity:**
+   - Extend existing TikTok preferences screen
+   - Add "Share Sanitizer" category under "Privacy"
+   - Use ReVanced's settings UI builder
+
+3. **Wire SharedPreferences:**
+   - Update `ShareSanitizerSettings.kt` to read from SharedPreferences
+   - Replace hardcoded defaults with actual preference lookups
+
+### Settings Behavior in ShareSanitizerHook
+
+```kotlin
+fun sanitizeShareUrl(originalUrl: String?, context: Any?): String? {
+    // Check master toggle
+    if (!ShareSanitizerSettings.isEnabled()) {
+        return originalUrl  // Pass through unsanitized
+    }
+
+    // Perform sanitization
+    val sanitized = /* expand + normalize pipeline */
+
+    // Optionally append message
+    return if (ShareSanitizerSettings.shouldAppendMessage()) {
+        sanitized + Settings.PRIVACY_MESSAGE
+    } else {
+        sanitized
+    }
+}
+```
+
+**Key Design Choices:**
+- Master toggle provides quick disable without uninstalling patch
+- Message suffix is opt-in (default: false) to avoid surprising users
+- Settings check happens before expensive HTTP calls (performance)
+
+---
+
 ## Extension Integration
 
 ### Required Extension Methods
@@ -455,9 +550,13 @@ adb logcat | grep -E "ShareSanitizer|ClipboardManager|LIZLLL"
   - Test recent versions (36.6.x, 37.x)
   - Update compatibility annotations in patch
 
-- [ ] **Settings Integration**
-  - Add toggle for optional anonymization message suffix
-  - Wire into existing TikTok settings UI
+- [x] **Settings Integration** ✅
+  - Settings structure defined in `Settings.kt`
+  - ShareSanitizerSettings.kt provides settings access layer
+  - Two toggles implemented:
+    - `revanced_tiktok_share_sanitizer_enabled` (default: true)
+    - `revanced_tiktok_share_sanitizer_append_message` (default: false)
+  - Ready for SharedPreferences wiring in upstream integration
 
 ---
 

@@ -16,6 +16,7 @@ import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCop
  * - Expands shortlinks (vm.tiktok.com, vt.tiktok.com) to full URLs
  * - Normalizes to canonical format: https://www.tiktok.com/@USER/video/ID
  * - Strips tracking parameters (u_code, etc.) and query strings
+ * - Optionally appends privacy message (configurable via settings)
  *
  * ## Hook Point
  * Injects at the entry of `C98761aTc.LIZLLL()` method which writes URLs to clipboard.
@@ -28,6 +29,7 @@ import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCop
  *   - UrlNormalizer: URL parsing and canonical format construction
  *   - ShortlinkExpander: HTTP redirect following with timeout
  *   - ShareSanitizerHook: Orchestrates the sanitization pipeline
+ *   - ShareSanitizerSettings: Settings access layer
  *
  * ## Extension Integration
  * This patch expects a companion extension in the revanced-integrations repository:
@@ -43,6 +45,21 @@ import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCop
  * }
  * ```
  *
+ * ## Settings
+ * Two user-configurable settings are available (see Settings.kt):
+ *
+ * 1. **revanced_tiktok_share_sanitizer_enabled** (default: true)
+ *    - Master toggle for the sanitizer
+ *    - When disabled, URLs pass through unchanged
+ *
+ * 2. **revanced_tiktok_share_sanitizer_append_message** (default: false)
+ *    - Appends "\n\nSanitized: tracking removed" to shared links
+ *    - Only applies when sanitizer is enabled
+ *
+ * Settings integration requires:
+ * - Adding preferences to TikTok settings UI (via SettingsPatch dependency)
+ * - SharedPreferences access in ShareSanitizerSettings
+ *
  * ## Compatibility
  * - TikTok 36.5.4 (com.zhiliaoapp.musically) ✅
  * - TikTok 36.5.4 (com.ss.android.ugc.trill) - Expected compatible
@@ -54,6 +71,8 @@ import app.revanced.patches.tiktok.misc.sharesanitizer.fingerprints.clipboardCop
  * @see clipboardCopyFingerprint
  * @see UrlNormalizer
  * @see ShortlinkExpander
+ * @see ShareSanitizerHook
+ * @see Settings
  */
 @Suppress("unused")
 val shareSanitizerPatch = bytecodePatch(
