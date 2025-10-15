@@ -1,6 +1,11 @@
 # ReVanced TikTok Share Sanitizer
 
-A standalone incubator for a ReVanced patch that removes tracking parameters from TikTok share links. Develops the core sanitization logic independently before integration into the upstream [`revanced-patches`](https://github.com/ReVanced/revanced-patches) monorepo.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/hxreborn/revanced-tiktok-share-sanitizer)
+[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org)
+[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://openjdk.java.net/projects/jdk/17/)
+
+A ReVanced patch incubator that sanitizes TikTok share links by removing tracking parameters and normalizing URLs to their canonical form. Develops the core sanitization logic independently before integration into the upstream [`revanced-patches`](https://github.com/ReVanced/revanced-patches) monorepo.
 
 ## Status
 
