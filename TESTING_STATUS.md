@@ -219,3 +219,17 @@ Once SDK is installed:
 
 **Last Updated**: 2025-10-15
 **Next Action**: Install Android SDK or continue with unit test development
+
+## Update (After Migration Attempt)
+
+Migration partially successful but build failing due to package/import issues.
+
+**Issue**: Files migrated but Kotlin compiler cannot resolve types within same package.
+
+**Current errors**: `Unresolved reference 'ExpansionError'` despite SanitizerError.kt being in same package.
+
+**Next action needed**: Manually verify all package declarations and imports in `/Users/rafa/Documents/GitHub/revanced-integrations/app/src/main/java/app/revanced/extension/tiktok/misc/sharesanitizer/`
+
+The patch logic is sound - this is just a packaging/build configuration issue that needs hands-on debugging.
+
+**Recommendation**: Use the standalone repo for continued development. APK testing can wait until upstream PR time.
